@@ -64,22 +64,23 @@ public abstract class Plant {
 	}
 	
 	// 植物状态改变
-	public void goMove() {
-		state = MOVE;
-	}
-	public void goLife() {
-		state = LIFE;
-	}
-	public void goStop() {
-		state = STOP;
-	}
-	public void goWait() {
-		state = WAIT;
-	}
-	public void goDead() {
-		state = DEAD;
-	}
-	
+//	public void goMove() {
+//		state = MOVE;
+//	}
+//	public void goLife() {
+//		state = LIFE;
+//	}
+//	public void goStop() {
+//		state = STOP;
+//	}
+//	public void goWait() {
+//		state = WAIT;
+//	}
+//	public void goDead() {
+//		state = DEAD;
+//	}
+
+
 	// 设置属性
 	protected int x;
 	protected int y;
