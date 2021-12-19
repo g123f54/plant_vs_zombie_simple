@@ -49,14 +49,17 @@ public abstract class Zombie {
 	}
 
 	// 僵尸状态改变
-	public void goDead() {
-		state = DEAD;
-	}
-	public void goAttack() {
-		state = ATTACK;
-	}
-	public void goLife() {
-		state = LIFE;
+//	public void goDead() {
+//		state = DEAD;
+//	}
+//	public void goAttack() {
+//		state = ATTACK;
+//	}
+//	public void goLife() {
+//		state = LIFE;
+//	}
+	public void setState(int i){
+		state = i;
 	}
 	
 	// 僵尸速度改为0
