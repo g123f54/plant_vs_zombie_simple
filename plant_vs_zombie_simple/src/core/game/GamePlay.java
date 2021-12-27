@@ -185,7 +185,8 @@ public class GamePlay extends JPanel{
 				// 如果战场上没有植物，则把所有僵尸的状态改为life
 				if(!z.isDead()) {
 					ZombieLife zombieLife = new ZombieLife();
-					zombieLife.doAction(z);
+					z.setState(zombieLife);
+					//zombieLife.doAction(z);
 					//z.goLife();
 				}
 				for(Plant p:plantsLife) {
@@ -193,7 +194,8 @@ public class GamePlay extends JPanel{
 					if(z.isLife()&&!p.isDead()&&z.zombieHit(p)&&!(p instanceof Spikerock)) {
 						// 僵尸状态改为攻击状态
 						ZombieAttack zombieAttack = new ZombieAttack();
-						zombieAttack.doAction(z);
+						z.setState(zombieAttack);
+						//zombieAttack.doAction(z);
 						//z.goAttack();
 						// 植物掉血
 						p.loseLive();
@@ -219,7 +221,8 @@ public class GamePlay extends JPanel{
 					case Award.CLEAR:
 						for(Zombie zo:zombies) {
 							ZombieDead zombieDead = new ZombieDead();
-							zombieDead.doAction(z);
+							zo.setState(zombieDead);
+							//zombieDead.doAction(z);
 							//zo.goDead();
 						}
 						break;
@@ -233,7 +236,8 @@ public class GamePlay extends JPanel{
 					}
 				}
 				ZombieDead zombieDead = new ZombieDead();
-				zombieDead.doAction(z);
+				z.setState(zombieDead);
+				//zombieDead.doAction(z);
 				//z.goDead();
 				it.remove();
 			}
@@ -318,7 +322,8 @@ public class GamePlay extends JPanel{
 			// 如果第一个植物的y大于0，并且是stop状态，则状态改为wait
 			if(plants.get(0).getY()>0&&plants.get(0).isStop()) {
 				PlantWait plantWait = new PlantWait();
-				plantWait.doAction(plants.get(0));//refactory
+				plants.get(0).setState(plantWait);
+				//plantWait.doAction(plants.get(0));//refactory
 //				plants.get(0).goWait();
 			}
 			// 如果第i个植物y小于i-1个植物的y+height，则说明碰到了，改变i的状态为stop
@@ -327,7 +332,8 @@ public class GamePlay extends JPanel{
 					plants.get(i).getY()<=plants.get(i-1).getY()+plants.get(i-1).getHeight()
 					) {
 				PlantStop plantStop = new PlantStop();
-				plantStop.doAction(plants.get(i));
+				plants.get(i).setState(plantStop);
+				//plantStop.doAction(plants.get(i));
 //				plants.get(i).goStop();
 			}
 			/*
@@ -337,7 +343,8 @@ public class GamePlay extends JPanel{
 			if(plants.get(i).isStop()&& 
 					plants.get(i).getY()>plants.get(i-1).getY()+plants.get(i-1).getHeight()) {
 				PlantWait plantWait = new PlantWait();
-				plantWait.doAction(plants.get(i));
+				plants.get(i).setState(plantWait);
+				//plantWait.doAction(plants.get(i));
 //				plants.get(i).goWait();
 			}
 		}
@@ -368,7 +375,8 @@ public class GamePlay extends JPanel{
 			// 植物生命小于0死亡，死亡状态的植物从集合中移出
 			if(p.getLive()<=0) {
 				PlantDead plantDead = new PlantDead();
-				plantDead.doAction(p);
+				p.setState(plantDead);
+				//plantDead.doAction(p);
 //				p.goDead();
 				it.remove();
 			}
@@ -472,7 +480,8 @@ public class GamePlay extends JPanel{
 									p.setY(y1);
 									g.goHold();
 									PlantLife plantLife = new PlantLife();
-									plantLife.doAction(p);
+									p.setState(plantLife);
+									//plantLife.doAction(p);
 //									p.goLife();
 									plantCheck = false;
 									if(p instanceof Blover) {
@@ -515,7 +524,8 @@ public class GamePlay extends JPanel{
 						int y2 = p.getY()+p.getHeight();						
 						if(Mx>=x1&&Mx<=x2&&My>=y1&&My<=y2) {
 							PlantMove plantMove = new PlantMove();
-							plantMove.doAction(p);
+							p.setState(plantMove);
+							//plantMove.doAction(p);
 //							p.goMove();
 							plantCheck = true;
 							break;
@@ -547,12 +557,14 @@ public class GamePlay extends JPanel{
 						if(((Blover) p).isClick()&&Mx>x1&&Mx<x2&&My>y1&&My<y2
 					&&!plantCheck&&!shovelCheck) {
 							PlantDead plantDead = new PlantDead();
-							plantDead.doAction(p);
+							p.setState(plantDead);
+							//plantDead.doAction(p);
 //							p.goDead();
 							for(Zombie z:zombies) {
 								if(z.isAttack()) {
 									ZombieLife zombieLife = new ZombieLife();
-									zombieLife.doAction(z);
+									z.setState(zombieLife);
+									//zombieLife.doAction(z);
 									//z.goLife();
 								}
 								z:for(int i=0;i<10;i++) {
