@@ -58,10 +58,14 @@ public abstract class Zombie {
 //	public void goLife() {
 //		state = LIFE;
 //	}
-	public void setState(int i){
-		state = i;
+//	public void setState(int i){
+//		state = i;
+//	}
+
+	public void setState(ZombieState zombieState){
+		state = zombieState.doAction();
 	}
-	
+
 	// 僵尸速度改为0
 	public void goStop() {
 		xSpeed = 0;
