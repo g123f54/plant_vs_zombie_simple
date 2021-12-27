@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import core.game.Background;
 import core.game.GamePlay;
+import core.zombies.ZombieState;
 
 public abstract class Plant {
 	
@@ -42,10 +43,13 @@ public abstract class Plant {
 	protected int state = WAIT;
 	
 	// 设置植物的状态
-	public void setState(int state) {
-		this.state = state;
+//	public void setState(int state) {
+//		this.state = state;
+//	}
+	public void setState(PlantState plantState){
+		state = plantState.doAction();
 	}
-	
+
 	// 判断植物的状态
 	public boolean isWait() {
 		return state == WAIT;

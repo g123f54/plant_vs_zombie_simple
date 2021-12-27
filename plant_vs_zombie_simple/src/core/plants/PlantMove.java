@@ -2,7 +2,7 @@ package core.plants;
 
 public class PlantMove implements PlantState{
     @Override
-    public void doAction(Plant p) {
-        p.setState(2);
+    public int doAction() {
+        return 2;
     }
 }
