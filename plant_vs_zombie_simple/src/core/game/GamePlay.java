@@ -54,399 +54,32 @@ public class GamePlay extends JPanel{
 
 	// 游戏对象
 	// 僵尸集合
-	private List<Zombie> zombies = new ArrayList<Zombie>();
+	ZombieList zombieList = new ZombieList();
+
 	// 植物集合
-	// 滚轮机上的植物，状态为stop和wait
-	private List<Plant> plants = new ArrayList<Plant>();
-	// 战场上的植物，状态为life和move
-	private List<Plant> plantsLife = new ArrayList<Plant>();
+	PlantList plantList = new PlantList();
+
 	// 子弹集合
-	private List<Bullet> bullets = new ArrayList<Bullet>();
+	BulletList bulletList = new BulletList();
+
 	// 草地集合
-	private List<Glass> glasses = new ArrayList<Glass>();
+	GlassList glassList = new GlassList();
+
 	// 铲子
-	private List<Shovel> shovels = new ArrayList<Shovel>();
-
-	// 铲子入场
-	public void shovelEnterAction() {
-		// 铲子只有一把
-		if(shovels.size()==0) {
-			shovels.add(new Shovel());
-		}
-	}
-
-	// 草地入场
-	// 第一块草地的坐标
-	int glassX = 260;
-	int glassY = 80;
-	public void glassEnterAction() {
-		for(int i=0;i<9;i++) {
-			int x = glassX + i*Glass.WIDTH;
-			for(int j=0;j<5;j++) {
-				int y = glassY + j*Glass.HEIGHT;
-				glasses.add(new Glass(x,y));
-			}
-		}
-	}
-
-	// 检测草地状态
-	public void glassCheckAction() {
-		// 先遍历所有草地，将状态改为空
-		for(Glass g:glasses) {
-			g.goEmpty();
-			// 遍历所有植物，如果草地上有植物，将草地状态改为被占有
-			for(Plant p:plantsLife) {
-				if(p.isLife()) {
-					int x1 = g.getX();
-					int y1 = g.getY();
-					int x = p.getX();
-					int y = p.getY();
-					// 共点问题
-					if(x==x1&&y==y1) {						
-						g.goHold();						
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	// 生成僵尸
-	public Zombie nextOneZombie() {
-		Random rand = new Random();
-		// 控制不同种类僵尸出现的概率
-		int type = rand.nextInt(20);
-		if(type<5) {
-			return new Zombie0();
-		}else if(type<10) {
-			return new Zombie1();
-		}else if(type<15) {
-			return new Zombie2();
-		}else {
-			return new Zombie3();
-		}
-	}
-
-	// 僵尸入场
-	// 设置进场间隔
-	int zombieEnterTime = 0;
-	public void zombieEnterAction() {
-		zombieEnterTime++;
-		if(zombieEnterTime%300==0) {
-			zombies.add(nextOneZombie());
-		}
-	}
-
-	//僵尸移动
-	//设置移动间隔
-	int zombieStepTime = 0;
-	public void zombieStepAction() {
-		if(zombieStepTime++%3==0) {
-			for(Zombie z:zombies) {
-				//只有活着的僵尸会移动
-				if(z.isLife()) {
-					z.step();
-				}
-			}
-		}
-	}
-
-	// 僵尸走到地刺上扣血
-	// 设置地刺攻击间隔
-	int spikerockHitTime = 0;
-	public void zombieMoveToSpikerockAction() {
-		if(spikerockHitTime++%20==0) {
-			for(Plant p :plantsLife) {
-				// 如果植物是地刺类型就去遍历僵尸集合
-				if(p instanceof Spikerock) {
-					for(Zombie z: zombies) {
-						int x1 = p.getX();
-						int x2 = p.getX()+p.getWidth();
-						int y1 = p.getY();
-						int y2 = p.getY()+p.getHeight();
-						int x = z.getX();
-						int y = z.getY();
-						// 如果僵尸在地刺上就扣血
-						if(x>x1&&x<x2&&y>y1&&y<y2&&p.isLife()&&(z.isLife()||z.isAttack())) {
-							z.loseLive();
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// 僵尸攻击
-	// 设置攻击间隔
-	int zombieHitTime = 0;
-	public void zombieHitAction() {
-		if(zombieHitTime++%100==0) {
-			for(Zombie z:zombies) {
-				// 如果战场上没有植物，则把所有僵尸的状态改为life
-				if(!z.isDead()) {
-					ZombieLife zombieLife = new ZombieLife();
-					z.setState(zombieLife);
-					//zombieLife.doAction(z);
-					//z.goLife();
-				}
-				for(Plant p:plantsLife) {
-					// 如果僵尸是活的，并且植物是活的，并且僵尸进入攻击植物的范围
-					if(z.isLife()&&!p.isDead()&&z.zombieHit(p)&&!(p instanceof Spikerock)) {
-						// 僵尸状态改为攻击状态
-						ZombieAttack zombieAttack = new ZombieAttack();
-						z.setState(zombieAttack);
-						//zombieAttack.doAction(z);
-						//z.goAttack();
-						// 植物掉血
-						p.loseLive();
-					}
-				}
-			}
-		}
-	}
-
-	// 检测僵尸状态
-	public void checkZombieAction() {
-		// 迭代器
-		Iterator<Zombie> it = zombies.iterator();
-		while(it.hasNext()) {
-			Zombie z = it.next();
-			// 僵尸血量小于0则死亡,死亡的僵尸从集合中删除
-			if(z.getLive()<=0) {
-				// 判断僵尸是否有奖励的接口
-				if(z instanceof Award) {
-					Award a = (Award)z;
-					int type = a.getAwardType();
-					switch(type) {
-					case Award.CLEAR:
-						for(Zombie zo:zombies) {
-							ZombieDead zombieDead = new ZombieDead();
-							zo.setState(zombieDead);
-							//zombieDead.doAction(z);
-							//zo.goDead();
-						}
-						break;
-					case Award.STOP:
-						for(Zombie zom:zombies) {
-							zom.goStop();
-							timeStop = 1;
-							//zombieGoLife();
-						}
-						break;
-					}
-				}
-				ZombieDead zombieDead = new ZombieDead();
-				z.setState(zombieDead);
-				//zombieDead.doAction(z);
-				//z.goDead();
-				it.remove();
-			}
-			// 僵尸跑进房子，而游戏生命减一，并删除僵尸
-			if(z.OutOfBound()) {
-				gameLife--;
-				it.remove();
-			}
-		}
-	}
-
-	// 僵尸静止2秒后继续移动
-	int timeStop = 1;
-	public void zombieGoLife() {
-		if(timeStop++%200==0) {
-			for(Zombie z:zombies) {
-				z.goRun();
-			}
-		}
-	}
+	ShovelList shovelList = new ShovelList();
 
 	// 检测游戏状态
 	// 初始游戏生命值
-	int gameLife = 1;
+	static int gameLife = 1;
 	public void checkGameAction() {
 		if(gameLife<=0) {
 			state = GAME_OVER;
 			// 游戏结束清空所有集合
-			plants.clear();
-			plantsLife.clear();
-			zombies.clear();
-			bullets.clear();
-			shovels.clear();
-		}
-	}
-
-	// 生成植物
-	public Plant nextOnePlant() {
-		Random rand = new Random();
-		int type = rand.nextInt(30);
-		// 控制植物的出场概率
-		if(type<5) {
-			return new Repeater();
-		}else if(type<10) {
-			return new SnowPea();
-		}else if(type<15) {
-			return new ThreePeater();
-		}else if(type<20) {
-			return new Spikerock();
-		}else if(type<25) {
-			return new Blover();
-		}else {
-			return new WallNut();
-		}
-	}
-
-	// 植物入场
-	// 设置进场间隔
-	int plantTime = 0;
-	public void plantEnterAction() {
-		plantTime++;
-		if(plantTime%300==0) {
-			// 添加到滚轮机集合中
-			plants.add(nextOnePlant());
-		}
-	}
-
-	// 植物移动
-	public void plantStepAction() {
-		for(Plant p:plants) {
-			// 只有滚轮机集合中的wait状态的植物会移动
-			if(p.isWait()) {
-				p.step();
-			}
-		}
-	}
-
-	// 植物在滚轮机上的碰撞判定
-	public void plantBangAction() {
-		// 遍历滚轮机上植物集合，从第二个开始
-		for(int i=1;i<plants.size();i++) {
-			// 如果第一个植物的y大于0，并且是stop状态，则状态改为wait
-			if(plants.get(0).getY()>0&&plants.get(0).isStop()) {
-				PlantWait plantWait = new PlantWait();
-				plants.get(0).setState(plantWait);
-				//plantWait.doAction(plants.get(0));//refactory
-//				plants.get(0).goWait();
-			}
-			// 如果第i个植物y小于i-1个植物的y+height，则说明碰到了，改变i的状态为stop
-			if((plants.get(i).isStop()||plants.get(i).isWait())&&
-					(plants.get(i-1).isStop()||plants.get(i-1).isWait())&&
-					plants.get(i).getY()<=plants.get(i-1).getY()+plants.get(i-1).getHeight()
-					) {
-				PlantStop plantStop = new PlantStop();
-				plants.get(i).setState(plantStop);
-				//plantStop.doAction(plants.get(i));
-//				plants.get(i).goStop();
-			}
-			/*
-			 * 如果第i个植物y大于于i-1个植物的y+height，则说明还没碰到或者第i-1个
-			 * 植物被移走了，改变i的状态为wait，可以继续往上走
-			 */
-			if(plants.get(i).isStop()&& 
-					plants.get(i).getY()>plants.get(i-1).getY()+plants.get(i-1).getHeight()) {
-				PlantWait plantWait = new PlantWait();
-				plants.get(i).setState(plantWait);
-				//plantWait.doAction(plants.get(i));
-//				plants.get(i).goWait();
-			}
-		}
-	}
-
-	// 检测滚轮机上的植物状态
-	public void checkPlantAction1() {
-		// 迭代器
-		Iterator<Plant> it = plants.iterator();
-		while(it.hasNext()) {
-			Plant p = it.next();
-			/*
-			 * 如果滚轮机集合里有move或者life状态的植物
-			 * 则添加到战场植物的集合中，并从原数组中删除
-			 */
-			if(p.isMove()||p.isLife()) {
-				plantsLife.add(p);
-				it.remove();
-			}
-		}
-	}
-	// 检测战场上的植物状态
-	public void checkPlantAction2() {
-		// 迭代器
-		Iterator<Plant> it = plantsLife.iterator();
-		while(it.hasNext()) {
-			Plant p = it.next();
-			// 植物生命小于0死亡，死亡状态的植物从集合中移出
-			if(p.getLive()<=0) {
-				PlantDead plantDead = new PlantDead();
-				p.setState(plantDead);
-				//plantDead.doAction(p);
-//				p.goDead();
-				it.remove();
-			}
-		}
-	}
-	// 检测吹风草的状态
-	int bloverTime = 1;
-	public void checkBloverAction() {
-		if(bloverTime++%200==0) {
-			for(Plant p :plantsLife) {
-				if(p instanceof Blover &&p.isLife()) {
-					((Blover) p).goClick();
-				}
-			}
-		}
-	}
-
-	// 子弹入场
-	// 控制子弹进场的间隔时间
-	int BulletTime = 0;
-	public void BulletShootAction() {
-		if(BulletTime++%50==0) {
-			for(Plant p : plantsLife) {
-				if(p.isLife()) {
-					if(p instanceof Shoot) {
-						// 如果植物有射击的接口
-						Shoot s = (Shoot)p;
-						// 射击
-						//s.shoot();
-						// 把射击的子弹装进子弹数组
-						bullets.addAll(Arrays.asList(s.shoot()));
-					}
-				}
-			}
-		}
-	}
-
-	// 子弹移动
-	public void BulletStepAction() {
-		for(Bullet b:bullets) {
-			b.step();
-		}
-	}
-
-	// 子弹与僵尸的碰撞
-	public void hitAction() {
-		// 遍历僵尸和子弹数组
-		for(Zombie z:zombies) {
-			for(Bullet b:bullets) {
-				// 满足条件则僵尸扣血，子弹去死
-				if((z.isAttack()||z.isLife())&&b.isLife()&&b.hit(z)&&z.getX()<GamePlay.WIDTH) {
-					if(b instanceof SnowBullet) {
-						z.goSlowDown();
-					}
-					z.loseLive();
-					b.goDead();
-				}
-			}
-		}
-	}
-
-	// 检测子弹状态
-	public void bulletCheckAction() {
-		Iterator<Bullet> it = bullets.iterator();
-		while(it.hasNext()) {
-			Bullet b = it.next();
-			// 如果子弹死亡或者越界则删除
-			if(b.isDead()||b.isOutOfBound()) {
-				it.remove();
-			}
+			plantList.getPlantsList().clear();
+			plantList.getPlantsLifeList().clear();
+			zombieList.getZombieList().clear();
+			bulletList.getBulletsList().clear();
+			shovelList.getShovelsList().clear();
 		}
 	}
 
@@ -456,7 +89,7 @@ public class GamePlay extends JPanel{
 	boolean shovelCheck = false;
 	public void action() {
 		// 生成草地
-		glassEnterAction();
+		glassList.glassEnterAction();
 		// 鼠标的相关操作
 		MouseAdapter l = new MouseAdapter() {
 			// 鼠标点击事件
@@ -468,9 +101,9 @@ public class GamePlay extends JPanel{
 
 				if(state==RUNNING) {
 					// 放置植物
-					f:for(Plant p:plantsLife) {
+					f:for(Plant p:plantList.getPlantsLifeList()) {
 						if(p.isMove()&&plantCheck) {
-							for(Glass g:glasses) {
+							for(Glass g:glassList.getGlassesList()) {
 								int x1 = g.getX();
 								int x2 = g.getX()+g.getWidth();
 								int y1 = g.getY();
@@ -485,7 +118,7 @@ public class GamePlay extends JPanel{
 //									p.goLife();
 									plantCheck = false;
 									if(p instanceof Blover) {
-										bloverTime = 0;
+										plantList.bloverTime = 0;
 									}
 									break f;
 								}
@@ -493,8 +126,8 @@ public class GamePlay extends JPanel{
 						}
 					}
 				// 使用铲子
-				Iterator<Shovel> it = shovels.iterator();
-				Iterator<Plant> it2 = plantsLife.iterator();
+				Iterator<Shovel> it = shovelList.getShovelsList().iterator();
+				Iterator<Plant> it2 = plantList.getPlantsLifeList().iterator();
 				while(it.hasNext()) {
 					Shovel s = it.next();
 					// 如果铲子是移动状态，就遍历植物集合
@@ -516,7 +149,7 @@ public class GamePlay extends JPanel{
 					}
 				}
 				// 鼠标单击后，植物将改变状态，随鼠标移动
-				for(Plant p:plants) {
+				for(Plant p:plantList.getPlantsList()) {
 					if((p.isStop()||p.isWait())&&!plantCheck&&!shovelCheck) {
 						int x1 = p.getX();
 						int x2 = p.getX()+p.getWidth();
@@ -533,8 +166,8 @@ public class GamePlay extends JPanel{
 					}
 				}
 				// 铲子被选中后随鼠标移动
-				Iterator<Shovel> it3 = shovels.iterator();
-				if(plantsLife.size()>0) {
+				Iterator<Shovel> it3 = shovelList.getShovelsList().iterator();
+				if(plantList.getPlantsLifeList().size()>0) {
 					while(it3.hasNext()) {
 						Shovel s = it3.next();
 						int x1 = s.getX();
@@ -548,7 +181,7 @@ public class GamePlay extends JPanel{
 					}
 				}
 				// 点击吹风草吹走僵尸
-				for(Plant p:plantsLife) {
+				for(Plant p:plantList.getPlantsLifeList()) {
 					if(p instanceof Blover) {
 						int x1 = p.getX();
 						int x2 = p.getX()+p.getWidth();
@@ -560,7 +193,7 @@ public class GamePlay extends JPanel{
 							p.setState(plantDead);
 							//plantDead.doAction(p);
 //							p.goDead();
-							for(Zombie z:zombies) {
+							for(Zombie z:zombieList.getZombieList()) {
 								if(z.isAttack()) {
 									ZombieLife zombieLife = new ZombieLife();
 									z.setState(zombieLife);
@@ -608,7 +241,7 @@ public class GamePlay extends JPanel{
 			public void mouseMoved(MouseEvent e) {
 				if(state==RUNNING) {
 					// 被选中的植物随鼠标移动
-					for(Plant p:plantsLife) {	
+					for(Plant p:plantList.getPlantsLifeList()) {
 						if(p.isMove()) {
 							int x = e.getX();
 							int y = e.getY();
@@ -617,7 +250,7 @@ public class GamePlay extends JPanel{
 						}
 					}
 					// 被选中的铲子随鼠标移动
-					for(Shovel s:shovels) {
+					for(Shovel s:shovelList.getShovelsList()) {
 						if(s.isMove()) {
 							int x = e.getX();
 							int y = e.getY();
@@ -637,24 +270,24 @@ public class GamePlay extends JPanel{
 		timer.schedule(new TimerTask() {
 			public void run() {
 				if(state==RUNNING) {
-					shovelEnterAction();
-					zombieEnterAction();
-					zombieStepAction();
-					zombieMoveToSpikerockAction();
-					zombieHitAction();
-					plantEnterAction();
-					plantStepAction();
-					plantBangAction();
-					zombieGoLife();
-					BulletShootAction();
-					BulletStepAction();
-					hitAction();
-					checkBloverAction();
-					checkPlantAction1();
-					checkPlantAction2();
-					checkZombieAction();
-					bulletCheckAction();
-					glassCheckAction();
+					shovelList.shovelEnterAction();// 铲子入场
+					zombieList.zombieEnterAction();// 僵尸入场
+					zombieList.zombieStepAction();//僵尸移动
+					zombieList.zombieMoveToSpikerockAction(plantList);// 僵尸走到地刺上扣血
+					zombieList.zombieHitAction(plantList);// 僵尸攻击
+					plantList.plantEnterAction();
+					plantList.plantStepAction();
+					plantList.plantBangAction();
+					zombieList.zombieGoLife();
+					bulletList.BulletShootAction(plantList);
+					bulletList.BulletStepAction();
+					bulletList.hitAction(zombieList);
+					plantList.checkBloverAction();
+					plantList.checkPlantAction1();
+					plantList.checkPlantAction2();
+					zombieList.checkZombieAction();
+					bulletList.bulletCheckAction();
+					glassList.glassCheckAction(plantList);
 					checkGameAction();
 				}
 				repaint();
@@ -673,42 +306,24 @@ public class GamePlay extends JPanel{
 			gameOver.paintObject(g);
 		}
 		// 画植物
-		for(Plant p:plants) {
+		for(Plant p:plantList.getPlantsList()) {
 			p.paintObject(g);
 		}
-		for(Plant p:plantsLife) {
+		for(Plant p:plantList.getPlantsLifeList()) {
 			p.paintObject(g);
 		}
 		// 画僵尸
-		for(Zombie z:zombies) {
+		for(Zombie z:zombieList.getZombieList()) {
 			z.paintObject(g);
 		}
 		// 画子弹
-		for(Bullet b:bullets) {
+		for(Bullet b:bulletList.getBulletsList()) {
 			b.paintObject(g);
 		}		
 		// 画铲子
-		for(Shovel s:shovels) {
+		for(Shovel s:shovelList.getShovelsList()) {
 			s.paintObject(g);
 		}
 	}
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		GamePlay game= new GamePlay();
-		frame.add(game);
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(WIDTH, HEIGHT);
-		frame.setLocationRelativeTo(null); 
-		frame.setVisible(true); 
-
-		game.action();
-		
-		// 启动线程加载音乐
-		Runnable r = new zombieAubio("bgm.wav");
-		Thread t = new Thread(r);
-		t.start();
-	}
-	
 }
