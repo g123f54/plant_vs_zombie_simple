@@ -1,6 +1,6 @@
 package core.game;
 
-public class ShovelEnterAction extends Repaint{
+public class ShovelEnterAction implements Repaint{
     // 铲子入场
     @Override
     public void doAction(PaintingList paintingList) {

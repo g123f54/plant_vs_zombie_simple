@@ -2,7 +2,7 @@ package core.game;
 
 import core.plants.Plant;
 
-public class PlantStepAction extends Repaint{
+public class PlantStepAction implements Repaint{
     // 植物移动
     @Override
     public void doAction(PaintingList paintingList) {

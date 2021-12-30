@@ -16,7 +16,7 @@ public class Client {
         frame.setVisible(true);
 
         game.action();
-
+        game.doRepaint();
         // 启动线程加载音乐
         Runnable r = new zombieAubio("bgm.wav");
         Thread t = new Thread(r);

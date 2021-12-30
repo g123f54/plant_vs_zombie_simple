@@ -2,7 +2,7 @@ package core.game;
 
 import core.bullets.Bullet;
 
-public class BulletStepAction extends Repaint{
+public class BulletStepAction implements Repaint{
     // 子弹移动
     @Override
     public void doAction(PaintingList paintingList) {

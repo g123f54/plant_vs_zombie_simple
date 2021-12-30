@@ -6,7 +6,7 @@ import core.zombies.ZombieDead;
 
 import java.util.Iterator;
 
-public class CheckZombieAction extends Repaint{
+public class CheckZombieAction implements Repaint{
     // 检测僵尸状态
     @Override
     public void doAction(PaintingList paintingList) {

@@ -6,7 +6,7 @@ import core.zombies.Zombie;
 import core.zombies.ZombieAttack;
 import core.zombies.ZombieLife;
 
-public class ZombieHitAction extends Repaint{
+public class ZombieHitAction implements Repaint{
     // 僵尸攻击
     @Override
     public void doAction(PaintingList paintingList) {

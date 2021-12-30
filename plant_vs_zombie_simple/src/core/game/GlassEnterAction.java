@@ -1,6 +1,6 @@
 package core.game;
 
-public class GlassEnterAction extends Repaint{
+public class GlassEnterAction implements Repaint{
     private int glassX = 260;
     private int glassY = 80;
     @Override

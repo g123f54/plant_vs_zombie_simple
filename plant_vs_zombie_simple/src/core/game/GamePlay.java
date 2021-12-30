@@ -254,7 +254,57 @@ public class GamePlay extends JPanel{
 		};
 		this.addMouseListener(l);
 		this.addMouseMotionListener(l);
+		//doRepaint();
+//		// 定时器
+//		Timer timer = new Timer();
+//		int interval = 10;
+//		timer.schedule(new TimerTask() {
+//			public void run() {
+//				if(state==RUNNING) {
+//					changeRepaint = new ChangeRepaint(new ShovelEnterAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new ZombieEnterAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new ZombieStepAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new ZombieMoveToSpikerockAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new ZombieHitAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new PlantEnterAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new PlantStepAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new PlantBangAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new ZombieGoLife());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new BulletShootAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new BulletStepAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new HitAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new CheckBloverAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new CheckPlantAction1());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new CheckPlantAction2());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new CheckZombieAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new BulletCheckAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					changeRepaint = new ChangeRepaint(new GlassCheckAction());
+//					changeRepaint.executeRepaint(paintingList);
+//					checkGameAction();
+//				}
+//				repaint();
+//			}
+//		},interval,interval);
+	}
 
+	public void doRepaint(){
 		// 定时器
 		Timer timer = new Timer();
 		int interval = 10;

@@ -7,7 +7,7 @@ import core.zombies.Zombie;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Repaint {
+public interface Repaint {
 
-    public abstract void doAction(PaintingList paintingList);
+    void doAction(PaintingList paintingList);
 }

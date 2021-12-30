@@ -4,7 +4,7 @@ import core.bullets.Bullet;
 
 import java.util.Iterator;
 
-public class BulletCheckAction extends Repaint{
+public class BulletCheckAction implements Repaint{
     // 检测子弹状态
     @Override
     public void doAction(PaintingList paintingList) {

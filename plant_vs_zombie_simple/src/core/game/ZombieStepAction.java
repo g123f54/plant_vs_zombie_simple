@@ -2,7 +2,7 @@ package core.game;
 
 import core.zombies.Zombie;
 
-public class ZombieStepAction extends Repaint{
+public class ZombieStepAction implements Repaint{
     //僵尸移动
     @Override
     public void doAction(PaintingList paintingList) {

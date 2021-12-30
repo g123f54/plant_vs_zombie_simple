@@ -2,7 +2,7 @@ package core.game;
 
 import core.plants.Plant;
 
-public class GlassCheckAction extends Repaint{
+public class GlassCheckAction implements Repaint{
     // 检测草地状态
     @Override
     public void doAction(PaintingList paintingList) {

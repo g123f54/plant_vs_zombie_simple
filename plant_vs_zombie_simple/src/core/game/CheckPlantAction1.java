@@ -4,7 +4,7 @@ import core.plants.Plant;
 
 import java.util.Iterator;
 
-public class CheckPlantAction1 extends Repaint{
+public class CheckPlantAction1 implements Repaint{
     // 检测滚轮机上的植物状态
     @Override
     public void doAction(PaintingList paintingList) {

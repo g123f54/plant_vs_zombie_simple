@@ -4,7 +4,7 @@ import core.bullets.Bullet;
 import core.bullets.SnowBullet;
 import core.zombies.Zombie;
 
-public class HitAction extends Repaint{
+public class HitAction implements Repaint{
     // 子弹与僵尸的碰撞
     @Override
     public void doAction(PaintingList paintingList) {

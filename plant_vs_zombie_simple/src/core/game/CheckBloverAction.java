@@ -3,7 +3,7 @@ package core.game;
 import core.plants.Blover;
 import core.plants.Plant;
 
-public class CheckBloverAction extends Repaint{
+public class CheckBloverAction implements Repaint{
     @Override
     public void doAction(PaintingList paintingList) {
         paintingList.setBloverTime(paintingList.getBloverTime()+1);

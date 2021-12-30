@@ -5,7 +5,7 @@ import core.plants.Shoot;
 
 import java.util.Arrays;
 
-public class BulletShootAction extends Repaint{
+public class BulletShootAction implements Repaint{
     // 子弹入场
     @Override
     public void doAction(PaintingList paintingList) {

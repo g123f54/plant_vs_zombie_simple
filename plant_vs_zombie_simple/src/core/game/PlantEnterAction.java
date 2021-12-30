@@ -4,7 +4,7 @@ import core.plants.*;
 
 import java.util.Random;
 
-public class PlantEnterAction extends Repaint{
+public class PlantEnterAction implements Repaint{
     // 植物入场
     @Override
     public void doAction(PaintingList paintingList) {

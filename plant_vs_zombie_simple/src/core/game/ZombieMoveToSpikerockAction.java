@@ -4,7 +4,7 @@ import core.plants.Plant;
 import core.plants.Spikerock;
 import core.zombies.Zombie;
 
-public class ZombieMoveToSpikerockAction extends Repaint{
+public class ZombieMoveToSpikerockAction implements Repaint{
     // 僵尸走到地刺上扣血
     @Override
     public void doAction(PaintingList paintingList) {

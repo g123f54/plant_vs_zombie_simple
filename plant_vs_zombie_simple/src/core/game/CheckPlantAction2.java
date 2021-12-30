@@ -5,7 +5,7 @@ import core.plants.PlantDead;
 
 import java.util.Iterator;
 
-public class CheckPlantAction2 extends Repaint{
+public class CheckPlantAction2 implements Repaint{
     // 检测战场上的植物状态
     @Override
     public void doAction(PaintingList paintingList) {

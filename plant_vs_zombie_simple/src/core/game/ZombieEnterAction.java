@@ -4,7 +4,7 @@ import core.zombies.*;
 
 import java.util.Random;
 
-public class ZombieEnterAction extends Repaint{
+public class ZombieEnterAction implements Repaint{
     // 僵尸入场
     @Override
     public void doAction(PaintingList paintingList) {

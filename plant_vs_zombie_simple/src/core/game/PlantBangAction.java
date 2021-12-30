@@ -3,7 +3,7 @@ package core.game;
 import core.plants.PlantStop;
 import core.plants.PlantWait;
 
-public class PlantBangAction extends Repaint{
+public class PlantBangAction implements Repaint{
     // 植物在滚轮机上的碰撞判定
     @Override
     public void doAction(PaintingList paintingList) {
