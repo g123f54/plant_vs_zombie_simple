@@ -303,7 +303,7 @@ public class GamePlay extends JPanel{
 //			}
 //		},interval,interval);
 	}
-
+	int i = 0;
 	public void doRepaint(){
 		// 定时器
 		Timer timer = new Timer();
@@ -311,6 +311,7 @@ public class GamePlay extends JPanel{
 		timer.schedule(new TimerTask() {
 			public void run() {
 				if(state==RUNNING) {
+
 					changeRepaint = new ChangeRepaint(new ShovelEnterAction());
 					changeRepaint.executeRepaint(paintingList);
 					changeRepaint = new ChangeRepaint(new ZombieEnterAction());
@@ -350,6 +351,7 @@ public class GamePlay extends JPanel{
 					checkGameAction();
 				}
 				repaint();
+
 			}
 		},interval,interval);
 	}
