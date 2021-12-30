@@ -53,33 +53,21 @@ public class GamePlay extends JPanel{
 	private Background gameOver = new Background(WIDTH,HEIGHT,0,0);
 
 	// 游戏对象
-	// 僵尸集合
-	ZombieList zombieList = new ZombieList();
-
-	// 植物集合
-	PlantList plantList = new PlantList();
-
-	// 子弹集合
-	BulletList bulletList = new BulletList();
-
-	// 草地集合
-	GlassList glassList = new GlassList();
-
-	// 铲子
-	ShovelList shovelList = new ShovelList();
+	ChangeRepaint changeRepaint ;
+	PaintingList paintingList = new PaintingList();
 
 	// 检测游戏状态
 	// 初始游戏生命值
-	static int gameLife = 1;
+//	static int gameLife = 1;
 	public void checkGameAction() {
-		if(gameLife<=0) {
+		if(paintingList.getGameLife()<=0) {
 			state = GAME_OVER;
 			// 游戏结束清空所有集合
-			plantList.getPlantsList().clear();
-			plantList.getPlantsLifeList().clear();
-			zombieList.getZombieList().clear();
-			bulletList.getBulletsList().clear();
-			shovelList.getShovelsList().clear();
+			paintingList.getPlants().clear();
+			paintingList.getPlantsLife().clear();
+			paintingList.getZombies().clear();
+			paintingList.getBullets().clear();
+			paintingList.getShovels().clear();
 		}
 	}
 
@@ -89,7 +77,8 @@ public class GamePlay extends JPanel{
 	boolean shovelCheck = false;
 	public void action() {
 		// 生成草地
-		glassList.glassEnterAction();
+		changeRepaint = new ChangeRepaint(new GlassEnterAction());
+		changeRepaint.executeRepaint(paintingList);
 		// 鼠标的相关操作
 		MouseAdapter l = new MouseAdapter() {
 			// 鼠标点击事件
@@ -101,9 +90,9 @@ public class GamePlay extends JPanel{
 
 				if(state==RUNNING) {
 					// 放置植物
-					f:for(Plant p:plantList.getPlantsLifeList()) {
+					f:for(Plant p:paintingList.getPlantsLife()) {
 						if(p.isMove()&&plantCheck) {
-							for(Glass g:glassList.getGlassesList()) {
+							for(Glass g:paintingList.getGlasses()) {
 								int x1 = g.getX();
 								int x2 = g.getX()+g.getWidth();
 								int y1 = g.getY();
@@ -118,7 +107,8 @@ public class GamePlay extends JPanel{
 //									p.goLife();
 									plantCheck = false;
 									if(p instanceof Blover) {
-										plantList.bloverTime = 0;
+										paintingList.setBloverTime(0);
+//										repaint.setBloverTime(0);
 									}
 									break f;
 								}
@@ -126,8 +116,8 @@ public class GamePlay extends JPanel{
 						}
 					}
 				// 使用铲子
-				Iterator<Shovel> it = shovelList.getShovelsList().iterator();
-				Iterator<Plant> it2 = plantList.getPlantsLifeList().iterator();
+				Iterator<Shovel> it = paintingList.getShovels().iterator();
+				Iterator<Plant> it2 = paintingList.getPlantsLife().iterator();
 				while(it.hasNext()) {
 					Shovel s = it.next();
 					// 如果铲子是移动状态，就遍历植物集合
@@ -149,7 +139,7 @@ public class GamePlay extends JPanel{
 					}
 				}
 				// 鼠标单击后，植物将改变状态，随鼠标移动
-				for(Plant p:plantList.getPlantsList()) {
+				for(Plant p:paintingList.getPlants()) {
 					if((p.isStop()||p.isWait())&&!plantCheck&&!shovelCheck) {
 						int x1 = p.getX();
 						int x2 = p.getX()+p.getWidth();
@@ -166,8 +156,8 @@ public class GamePlay extends JPanel{
 					}
 				}
 				// 铲子被选中后随鼠标移动
-				Iterator<Shovel> it3 = shovelList.getShovelsList().iterator();
-				if(plantList.getPlantsLifeList().size()>0) {
+				Iterator<Shovel> it3 = paintingList.getShovels().iterator();
+				if(paintingList.getPlantsLife().size()>0) {
 					while(it3.hasNext()) {
 						Shovel s = it3.next();
 						int x1 = s.getX();
@@ -181,7 +171,7 @@ public class GamePlay extends JPanel{
 					}
 				}
 				// 点击吹风草吹走僵尸
-				for(Plant p:plantList.getPlantsLifeList()) {
+				for(Plant p:paintingList.getPlantsLife()) {
 					if(p instanceof Blover) {
 						int x1 = p.getX();
 						int x2 = p.getX()+p.getWidth();
@@ -193,7 +183,7 @@ public class GamePlay extends JPanel{
 							p.setState(plantDead);
 							//plantDead.doAction(p);
 //							p.goDead();
-							for(Zombie z:zombieList.getZombieList()) {
+							for(Zombie z:paintingList.getZombies()) {
 								if(z.isAttack()) {
 									ZombieLife zombieLife = new ZombieLife();
 									z.setState(zombieLife);
@@ -232,7 +222,8 @@ public class GamePlay extends JPanel{
 					if(Mx>=x1&&Mx<=x2&&My>=y1&&My<=y2) {
 						// 重新开始游戏
 						state = START;
-						gameLife = 1;
+						paintingList.setGameLife(1);
+						//gameLife = 1;
 					}
 				}
 			}
@@ -241,7 +232,7 @@ public class GamePlay extends JPanel{
 			public void mouseMoved(MouseEvent e) {
 				if(state==RUNNING) {
 					// 被选中的植物随鼠标移动
-					for(Plant p:plantList.getPlantsLifeList()) {
+					for(Plant p:paintingList.getPlantsLife()) {
 						if(p.isMove()) {
 							int x = e.getX();
 							int y = e.getY();
@@ -250,7 +241,7 @@ public class GamePlay extends JPanel{
 						}
 					}
 					// 被选中的铲子随鼠标移动
-					for(Shovel s:shovelList.getShovelsList()) {
+					for(Shovel s:paintingList.getShovels()) {
 						if(s.isMove()) {
 							int x = e.getX();
 							int y = e.getY();
@@ -270,24 +261,42 @@ public class GamePlay extends JPanel{
 		timer.schedule(new TimerTask() {
 			public void run() {
 				if(state==RUNNING) {
-					shovelList.shovelEnterAction();// 铲子入场
-					zombieList.zombieEnterAction();// 僵尸入场
-					zombieList.zombieStepAction();//僵尸移动
-					zombieList.zombieMoveToSpikerockAction(plantList);// 僵尸走到地刺上扣血
-					zombieList.zombieHitAction(plantList);// 僵尸攻击
-					plantList.plantEnterAction();
-					plantList.plantStepAction();
-					plantList.plantBangAction();
-					zombieList.zombieGoLife();
-					bulletList.BulletShootAction(plantList);
-					bulletList.BulletStepAction();
-					bulletList.hitAction(zombieList);
-					plantList.checkBloverAction();
-					plantList.checkPlantAction1();
-					plantList.checkPlantAction2();
-					zombieList.checkZombieAction();
-					bulletList.bulletCheckAction();
-					glassList.glassCheckAction(plantList);
+					changeRepaint = new ChangeRepaint(new ShovelEnterAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new ZombieEnterAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new ZombieStepAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new ZombieMoveToSpikerockAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new ZombieHitAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new PlantEnterAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new PlantStepAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new PlantBangAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new ZombieGoLife());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new BulletShootAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new BulletStepAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new HitAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new CheckBloverAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new CheckPlantAction1());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new CheckPlantAction2());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new CheckZombieAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new BulletCheckAction());
+					changeRepaint.executeRepaint(paintingList);
+					changeRepaint = new ChangeRepaint(new GlassCheckAction());
+					changeRepaint.executeRepaint(paintingList);
 					checkGameAction();
 				}
 				repaint();
@@ -306,22 +315,22 @@ public class GamePlay extends JPanel{
 			gameOver.paintObject(g);
 		}
 		// 画植物
-		for(Plant p:plantList.getPlantsList()) {
+		for(Plant p:paintingList.getPlants()) {
 			p.paintObject(g);
 		}
-		for(Plant p:plantList.getPlantsLifeList()) {
+		for(Plant p:paintingList.getPlantsLife()) {
 			p.paintObject(g);
 		}
 		// 画僵尸
-		for(Zombie z:zombieList.getZombieList()) {
+		for(Zombie z:paintingList.getZombies()) {
 			z.paintObject(g);
 		}
 		// 画子弹
-		for(Bullet b:bulletList.getBulletsList()) {
+		for(Bullet b:paintingList.getBullets()) {
 			b.paintObject(g);
 		}		
 		// 画铲子
-		for(Shovel s:shovelList.getShovelsList()) {
+		for(Shovel s:paintingList.getShovels()) {
 			s.paintObject(g);
 		}
 	}
