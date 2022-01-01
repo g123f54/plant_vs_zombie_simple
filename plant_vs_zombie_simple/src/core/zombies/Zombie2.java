@@ -33,9 +33,9 @@ public class Zombie2 extends Zombie{
 	}
 	
 	// 僵尸移动
-	public void step() {
-		this.x-=xSpeed;
-	}
+//	public void step() {
+//		this.x-=xSpeed;
+//	}
 	
 	// 僵尸的停止状态结束
 	public void goRun() {

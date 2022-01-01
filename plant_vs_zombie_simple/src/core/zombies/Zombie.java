@@ -35,7 +35,7 @@ public abstract class Zombie {
 	public static final int LIFE = 0;
 	public static final int ATTACK = 1;
 	public static final int DEAD = 2;
-	protected int state = LIFE;
+	private int state = LIFE;
 	
 	// 判断僵尸的状态
 	public boolean isLife() {
@@ -83,8 +83,8 @@ public abstract class Zombie {
 	protected int height;
 	protected int live;
 	protected int xSpeed;
-	protected int x;
-	protected int y;
+	private int x;
+	private int y;
 	
 	// 构造器
 	public Zombie(int width,int height) {
@@ -120,8 +120,12 @@ public abstract class Zombie {
 	}
 	
 	// 移动方式
-	public abstract void step();
-	
+//	public abstract void step();
+	public void step() {
+		this.x-= xSpeed;
+	}
+
+
 	// 僵尸被寒冰豌豆集中后减速
 	public void goSlowDown() {
 		xSpeed = 1;

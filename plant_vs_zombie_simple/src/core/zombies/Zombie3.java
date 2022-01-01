@@ -38,9 +38,9 @@ public class Zombie3 extends Zombie implements Award{
 	}
 	
 	// 僵尸移动
-	public void step() {
-		this.x-=xSpeed;
-	}
+//	public void step() {
+//		this.x-=xSpeed;
+//	}
 	
 	// 获取奖励类型
 	public int getAwardType() {
