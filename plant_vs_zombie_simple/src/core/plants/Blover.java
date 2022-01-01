@@ -35,9 +35,9 @@ public class Blover extends Plant{
 	}
 	
 	// 改变状态
-	public void goClick() {
-		state = CLICK;
-	}
+//	public void goClick() {
+//		state = CLICK;
+//	}
 	
 	// 构造器
 	public Blover() {
