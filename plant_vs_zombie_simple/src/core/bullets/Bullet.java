@@ -29,8 +29,8 @@ public abstract class Bullet {
 	}
 
 	// 基本属性
-	protected int x;
-	protected int y;
+	private int x;
+	private int y;
 	protected int width;
 	protected int height;
 	protected int xSpeed;
@@ -60,7 +60,7 @@ public abstract class Bullet {
 	// 子弹的状态
 	public static final int LIFE = 0;
 	public static final int DEAD = 1;
-	protected int state = LIFE;
+	private int state = LIFE;
 
 	// 判断子弹的状态
 	public boolean isLife() {
