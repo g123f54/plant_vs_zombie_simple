@@ -41,20 +41,20 @@ public class Background {
 	}
 	
 	// 获取图片
-	public BufferedImage getImage() {
-		if(GamePlay.state==GamePlay.START) {
+	public BufferedImage getImage(GamePlay gamePlay) {
+		if(gamePlay.getState()==GamePlay.START) {
 			return image[0];
-		}else if(GamePlay.state==GamePlay.RUNNING) {
+		}else if(gamePlay.getState()==GamePlay.RUNNING) {
 			return image[1];
-		}else if(GamePlay.state==GamePlay.GAME_OVER) {
+		}else if(gamePlay.getState()==GamePlay.GAME_OVER) {
 			return image[2];
 		}
 		return null;
 	}
 	
 	// 画图片
-	public void paintObject(Graphics g) {
-		g.drawImage(getImage(),x,y,null); 
+	public void paintObject(Graphics g,GamePlay gamePlay) {
+		g.drawImage(getImage(gamePlay),x,y,null);
 	}
 
 }

@@ -2,6 +2,8 @@ package core.game;
 
 import core.plants.Blover;
 import core.plants.Plant;
+import core.plants.PlantClick;
+import core.plants.PlantDead;
 
 public class CheckBloverAction implements Repaint{
     @Override
@@ -10,7 +12,9 @@ public class CheckBloverAction implements Repaint{
         if(paintingList.getBloverTime()%200==0) {
             for(Plant p : paintingList.getPlantsLife()) {
                 if(p instanceof Blover &&p.isLife()) {
-                    ((Blover) p).goClick();
+                    PlantClick plantClick = new PlantClick();
+                    p.setState(plantClick);
+                    //((Blover) p).goClick();
                 }
             }
         }

@@ -45,12 +45,18 @@ public class GamePlay extends JPanel{
 	public static final int RUNNING =1;
 	public static final int GAME_OVER =2;
 	// 游戏的初始状态
-	public static int state = RUNNING;
+//	public static int state = RUNNING;
+	private  int state = RUNNING;
+
+	public int getState() {
+		return state;
+	}
 
 	// 背景
-	private Background start = new Background(800,533,300,50);
-	private Background running = new Background(WIDTH,HEIGHT,0,0);
-	private Background gameOver = new Background(WIDTH,HEIGHT,0,0);
+	private Background backGround;
+//	private Background start = new Background(800,533,300,50);
+//	private Background running = new Background(WIDTH,HEIGHT,0,0);
+//	private Background gameOver = new Background(WIDTH,HEIGHT,0,0);
 
 	// 游戏对象
 	ChangeRepaint changeRepaint ;
@@ -358,13 +364,22 @@ public class GamePlay extends JPanel{
 
 	// 画
 	public void paint(Graphics g) {
+		//	private Background start = new Background(800,533,300,50);
+//	private Background running = new Background(WIDTH,HEIGHT,0,0);
+//	private Background gameOver = new Background(WIDTH,HEIGHT,0,0);
 		// 画背景
 		if(state==START) {
-			start.paintObject(g);
+			backGround = new Background(800,533,300,50);
+			backGround.paintObject(g,this);
+			//start.paintObject(g);
 		}else if(state==RUNNING) {
-			running.paintObject(g);
+			backGround = new Background(WIDTH,HEIGHT,0,0);
+			backGround.paintObject(g,this);
+//			running.paintObject(g);
 		}else if(state==GAME_OVER) {
-			gameOver.paintObject(g);
+			backGround = new Background(WIDTH,HEIGHT,0,0);
+			backGround.paintObject(g,this);
+//			gameOver.paintObject(g);
 		}
 		// 画植物
 		for(Plant p:paintingList.getPlants()) {
